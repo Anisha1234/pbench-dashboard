@@ -80,6 +80,11 @@ module.exports = [
             exact: true,
             component: './Profile',
           },
+          {
+            path: '/private/overview',
+            name: 'overview',
+            component: './Overview',
+          },
         ],
       },
       {

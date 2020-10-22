@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow, configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import AuthLayout from '@/components/AuthLayout';
+import LoginModal from '@/components/LoginModal';
 import PrivateRoute from './index';
 
 const mockProps = {
@@ -20,7 +20,7 @@ describe('test Login page component', () => {
     expect(wrapper).toMatchSnapshot();
   });
 
-  it('render AuthLayout component', () => {
-    expect(wrapper.find(AuthLayout).length).toBe(1);
+  it('render LoginModal component', () => {
+    expect(wrapper.find(LoginModal).length).toBe(1);
   });
 });

@@ -2,7 +2,8 @@ import { isUrl } from '../utils/utils';
 
 const menuData = [
   {
-    name: 'Dashboard',
+    name: 'Overview',
+    icon: 'dashboard',
     path: '/private',
     routes: [
       {
@@ -26,6 +27,11 @@ const menuData = [
         ],
       },
     ],
+  },
+  {
+    name: 'Controllers',
+    icon: 'controllers',
+    path: '/',
   },
   {
     name: 'Search',
