@@ -151,7 +151,8 @@ export async function queryTocResult(params) {
     endpoints,
     endpoints.run_index,
     selectedDateRange
-  )}/_search?q=_parent:"${id}"`;
+  )}/_search?q=_parent:"${id}" AND parent:"${parent}"`;
+  console.log(endpoint);
 
   return request.post(endpoint, {
     params: {
