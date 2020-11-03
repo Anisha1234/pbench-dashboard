@@ -181,7 +181,6 @@ export default {
         extension,
         fileNames,
       };
-      console.log(summaryTocResult);
       yield put({
         type: 'getTocResult',
         payload: summaryTocResult,
