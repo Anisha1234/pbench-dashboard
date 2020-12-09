@@ -147,7 +147,6 @@ export default {
     },
     *fetchTocResult({ payload }, { call, put }) {
       const response = yield call(queryTocResult, payload);
-      console.log(response);
       const tocResult = [];
       const extension = [];
       const fileNames = [];
@@ -171,9 +170,10 @@ export default {
         }
         return tocResult;
       });
-      console.log(tocResult);
+      // eslint-disable-next-line
+      const reg = /\/[^\/]*/gm;
       const tocTree = Object.keys(tocResult)
-        .map(path => path.split('/').slice(1))
+        .map(path => path.match(reg))
         .reduce((items, path) => insertTocTreeData(tocResult, items, path), []);
 
       const summaryTocResult = {

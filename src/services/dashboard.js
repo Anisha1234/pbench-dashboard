@@ -146,14 +146,13 @@ export async function queryResult(params) {
 
 export async function queryTocResult(params) {
   const { selectedDateRange, id } = params;
-
+  let { parent } = params;
+  parent = parent === undefined ? '/' : parent;
   const endpoint = `${endpoints.elasticsearch}/${getAllMonthsWithinRange(
     endpoints,
     endpoints.run_index,
     selectedDateRange
   )}/_search?q=_parent:"${id}" AND parent:"${parent}"`;
-  console.log(endpoint);
-
   return request.post(endpoint, {
     params: {
       ignore_unavailable: true,
