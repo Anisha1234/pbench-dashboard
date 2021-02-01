@@ -9,6 +9,10 @@ import {
   Button,
   Tabs,
   Tab,
+  Progress,
+  ProgressSize,
+  ProgressMeasureLocation,
+  ProgressVariant,
 } from '@patternfly/react-core';
 import {
   Chart,
@@ -210,29 +214,41 @@ class Overview extends React.Component {
         render: text => {
           const deleteDate = moment(new Date(Date.parse(text)));
           const currDate = moment(new Date());
-          const remainingDays = currDate.diff(deleteDate, 'days');
-          console.log(remainingDays, expirationLimit);
-          if (remainingDays < 0) {
+          const remainingDays = deleteDate.diff(currDate, 'days');
+          if (remainingDays > 60) {
             return (
-              <Text>
-                {moment(text)
-                  .add(7, 'days')
-                  .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-              </Text>
+              <div>
+                <Text>
+                  {moment(text)
+                    .add(7, 'days')
+                    .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
+                </Text>
+                <Progress
+                  min={0}
+                  max={expirationLimit}
+                  value={expirationLimit - remainingDays}
+                  size={ProgressSize.sm}
+                  measureLocation={ProgressMeasureLocation.none}
+                />
+              </div>
             );
           }
           return (
-            <span>
-              {moment(text)
-                .add(7, 'days')
-                .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-              <FontAwesomeIcon
-                style={{ paddingLeft: '5px', width: '20px' }}
-                icon={faExclamationCircle}
-                color="red"
-                className={styles.icons}
+            <div>
+              <span>
+                {moment(text)
+                  .add(7, 'days')
+                  .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
+              </span>
+              <Progress
+                min={0}
+                max={expirationLimit}
+                value={expirationLimit - remainingDays}
+                size={ProgressSize.sm}
+                variant={ProgressVariant.danger}
+                measureLocation={ProgressMeasureLocation.none}
               />
-            </span>
+            </div>
           );
         },
       },
