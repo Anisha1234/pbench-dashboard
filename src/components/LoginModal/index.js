@@ -9,6 +9,7 @@ import {
 } from '@patternfly/react-core';
 import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
+import LoginForm from '@/components/LoginForm';
 
 @connect(auth => ({
   auth: auth.auth,
@@ -18,10 +19,32 @@ class LoginModal extends React.Component {
     super(props);
     this.state = {
       isModalOpen: false,
+      modalContent: '',
     };
   }
 
   componentDidMount() {
+    const loginAction = (
+      <div>
+        <TextContent>
+          <Text component={TextVariants.h4}>
+            This action requires login. Please login to Pbench Dashboard to continue.
+          </Text>
+        </TextContent>
+        <Button key="confirm" variant="primary" onClick={this.handleLoginModal}>
+          Login
+        </Button>
+        <Button key="confirm" variant="link" onClick={this.handleSignupModal}>
+          Signup
+        </Button>
+        <Button key="cancel" variant="link" onClick={this.handleModalCancel}>
+          Cancel
+        </Button>
+      </div>
+    );
+    this.setState({
+      modalContent: loginAction,
+    });
     this.handleModalToggle();
   }
 
@@ -40,11 +63,9 @@ class LoginModal extends React.Component {
   };
 
   handleLoginModal = () => {
-    const { dispatch } = this.props;
-    this.setState(({ isModalOpen }) => ({
-      isModalOpen: !isModalOpen,
-    }));
-    dispatch(routerRedux.push(`/auth`));
+    this.setState({
+      modalContent: <LoginForm />,
+    });
   };
 
   handleSignupModal = () => {
@@ -56,8 +77,7 @@ class LoginModal extends React.Component {
   };
 
   render() {
-    const { isModalOpen } = this.state;
-
+    const { isModalOpen, modalContent } = this.state;
     return (
       <React.Fragment>
         <Modal
@@ -65,23 +85,8 @@ class LoginModal extends React.Component {
           isOpen={isModalOpen}
           onClose={this.handleModalCancel}
           showClose="false"
-          actions={[
-            <Button key="confirm" variant="primary" onClick={this.handleLoginModal}>
-              Login
-            </Button>,
-            <Button key="confirm" variant="link" onClick={this.handleSignupModal}>
-              Signup
-            </Button>,
-            <Button key="cancel" variant="link" onClick={this.handleModalCancel}>
-              Cancel
-            </Button>,
-          ]}
         >
-          <TextContent>
-            <Text component={TextVariants.h4}>
-              This action requires login. Please login to Pbench Dashboard to continue.
-            </Text>
-          </TextContent>
+          {modalContent}
         </Modal>
       </React.Fragment>
     );
