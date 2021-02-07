@@ -75,3 +75,14 @@ export const resultData = [
     description: 'More content can be added here',
   },
 ];
+
+export const expiringSoonResults = {
+  'mock-result-1': '2020-09-10T 11:52:34:552478',
+  'mock-result-2': '2020-09-10T 11:52:34:552478',
+  'mock-result-3': '2020-09-10T 11:52:34:552478',
+  'mock-result-4': '2020-09-10T 11:52:34:552478',
+  'mock-result-5': '2020-09-10T 11:52:34:552478',
+  'mock-result-6': '2020-09-10T 11:52:34:552478',
+  'mock-result-7': '2020-09-10T 11:52:34:552478',
+  'mock-result-8': '2020-09-10T 11:52:34:552478',
+};

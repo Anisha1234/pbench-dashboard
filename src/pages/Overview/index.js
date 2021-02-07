@@ -18,9 +18,8 @@ import moment from 'moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { OutlinedClockIcon, UndoAltIcon, EllipsisVIcon } from '@patternfly/react-icons';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
-import { resultData, expirationLimit } from '../../../mock/overview';
+import { resultData, expirationLimit, expiringSoonResults } from '../../../mock/overview';
 import Table from '@/components/Table';
-// import { Table } from 'antd';
 import styles from './index.less';
 
 @connect(({ datastore, global, user }) => ({
@@ -267,6 +266,23 @@ class Overview extends React.Component {
       }),
     };
 
+    const expiringSoonTable = Object.keys(expiringSoonResults).map(function(key) {
+      return (
+        <Card className={styles.subCard}>
+          <div className={styles.paddingSmall}>
+            <TextContent>
+              <Button variant="link" isInline>
+                {key}
+              </Button>
+              <Text component={TextVariants.p} className={styles.subText}>
+                <OutlinedClockIcon className={styles.icons} /> {expiringSoonResults[key]}
+              </Text>
+            </TextContent>
+          </div>
+        </Card>
+      );
+    });
+
     return (
       <div className={styles.paddingBig}>
         <TextContent className={styles.paddingSmall}>
@@ -274,147 +290,28 @@ class Overview extends React.Component {
         </TextContent>
         <Grid hasGutter>
           <GridItem span={3}>
-            <Card>
-              <div className={styles.paddingBig}>
-                <TextContent>
-                  <Text component={TextVariants.h3}>
-                    <FontAwesomeIcon
-                      icon={faExclamationCircle}
-                      color="red"
-                      className={styles.icons}
-                    />
-                    Expiring Soon
-                  </Text>
-                  <Text component={TextVariants.p} className={styles.subText}>
-                    These runs will be automatically deleted from the sysem if left unacknowledged.
-                    <Button variant="link" isInline>
-                      Learn more
-                    </Button>
-                  </Text>
-                </TextContent>
-              </div>
+            <Card className={styles.parallalCard}>
               <div className={styles.expiringValues}>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
+                <div className={styles.paddingBig}>
+                  <TextContent>
+                    <Text component={TextVariants.h3}>
+                      <FontAwesomeIcon
+                        icon={faExclamationCircle}
+                        color="red"
+                        className={styles.icons}
+                      />
+                      Expiring Soon
+                    </Text>
+                    <Text component={TextVariants.p} className={styles.subText}>
+                      These runs will be automatically deleted from the sysem if left
+                      unacknowledged.
                       <Button variant="link" isInline>
-                        mock-result-1
+                        Learn more
                       </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-2
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-3
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-4
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-5
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-6
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-7
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-8
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-9
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
-
-                <Card className={styles.subCard}>
-                  <div className={styles.paddingSmall}>
-                    <TextContent>
-                      <Button variant="link" isInline>
-                        mock-result-10
-                      </Button>
-                      <Text component={TextVariants.p} className={styles.subText}>
-                        <OutlinedClockIcon className={styles.icons} /> 2020-09-10T 11:52:34:552478
-                      </Text>
-                    </TextContent>
-                  </div>
-                </Card>
+                    </Text>
+                  </TextContent>
+                </div>
+                {expiringSoonTable}
               </div>
               <Card className={styles.subCard}>
                 <div className={styles.paddingSmall}>
@@ -426,7 +323,7 @@ class Overview extends React.Component {
             </Card>
           </GridItem>
           <GridItem span={9}>
-            <Card>
+            <Card className={styles.parallalCard}>
               <div className={styles.paddingBig}>
                 <TextContent>
                   <Text component={TextVariants.h3}>
