@@ -75,15 +75,20 @@ module.exports = [
             component: './Overview',
           },
           {
+            path: '/private/overview',
+            name: 'overview',
+            component: './Overview',
+          },
+          {
             path: '/private/profile',
             name: 'profile',
             exact: true,
             component: './Profile',
           },
           {
-            path: '/private/overview',
-            name: 'overview',
-            component: './Overview',
+            path: '/private/runresults',
+            name: 'runresults',
+            component: './RunResults',
           },
         ],
       },

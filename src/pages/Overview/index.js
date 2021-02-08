@@ -1,4 +1,5 @@
 import React from 'react';
+import { routerRedux } from 'dva/router';
 import {
   Grid,
   GridItem,
@@ -22,10 +23,8 @@ import { resultData, expirationLimit, expiringSoonResults } from '../../../mock/
 import Table from '@/components/Table';
 import styles from './index.less';
 
-@connect(({ datastore, global, user }) => ({
+@connect(({ user }) => ({
   user: user.user,
-  indices: datastore.indices,
-  selectedIndices: global.selectedIndices,
 }))
 class Overview extends React.Component {
   constructor(props) {
@@ -99,6 +98,20 @@ class Overview extends React.Component {
     );
   };
 
+  navigateToRunResult = key => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'global/updateSelectedPrivateController',
+      payload: key,
+    }).then(() => {
+      dispatch(
+        routerRedux.push({
+          pathname: 'private/runresults',
+        })
+      );
+    });
+  };
+
   render() {
     const { newData, unlabledData } = this.state;
 
@@ -110,7 +123,12 @@ class Overview extends React.Component {
         render: text => {
           return (
             <div>
-              <Button variant="link" isInline style={{ marginBottom: '8px' }}>
+              <Button
+                variant="link"
+                isInline
+                style={{ marginBottom: '8px' }}
+                onClick={() => this.navigateToRunResult(text[0])}
+              >
                 {text[0]}
               </Button>
               <br />
@@ -166,7 +184,12 @@ class Overview extends React.Component {
         key: 'result',
         render: text => (
           <div>
-            <Button variant="link" isInline style={{ marginBottom: '8px' }}>
+            <Button
+              variant="link"
+              isInline
+              style={{ marginBottom: '8px' }}
+              onClick={() => this.navigateToRunResult(text[0])}
+            >
               {text[0]}
             </Button>
             <br />
@@ -266,16 +289,16 @@ class Overview extends React.Component {
       }),
     };
 
-    const expiringSoonTable = Object.keys(expiringSoonResults).map(function(key) {
+    const expiringSoonTable = Object.keys(expiringSoonResults).map(function(result) {
       return (
         <Card className={styles.subCard}>
           <div className={styles.paddingSmall}>
             <TextContent>
               <Button variant="link" isInline>
-                {key}
+                {result}
               </Button>
               <Text component={TextVariants.p} className={styles.subText}>
-                <OutlinedClockIcon className={styles.icons} /> {expiringSoonResults[key]}
+                <OutlinedClockIcon className={styles.icons} /> {expiringSoonResults[result]}
               </Text>
             </TextContent>
           </div>
