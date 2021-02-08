@@ -37,6 +37,12 @@ class Overview extends React.Component {
   }
 
   componentDidMount() {
+    const { totalResultData } = this.state;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'privatedatastore/updatePrivateControllers',
+      payload: totalResultData,
+    });
     this.getSeperatedResults();
   }
 
@@ -101,7 +107,7 @@ class Overview extends React.Component {
   navigateToRunResult = key => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'global/updateSelectedPrivateController',
+      type: 'privatedatastore/updateSelectedPrivateController',
       payload: key,
     }).then(() => {
       dispatch(
