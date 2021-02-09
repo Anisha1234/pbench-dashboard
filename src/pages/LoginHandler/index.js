@@ -4,7 +4,7 @@ import LoginForm from '@/components/LoginForm';
 
 function LoginHandler() {
   return (
-    <AuthLayout toPreview={<LoginForm />} heading="Log into your Pbench Acount" backOpt="true" />
+    <AuthLayout toPreview={<LoginForm />} heading="Log into your Pbench Account" backOpt="true" />
   );
 }
 

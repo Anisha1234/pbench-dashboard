@@ -3,7 +3,6 @@ import { isUrl } from '../utils/utils';
 const menuData = [
   {
     name: 'Overview',
-    icon: 'dashboard',
     path: '/private',
     routes: [
       {

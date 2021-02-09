@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react';
-// import AuthLayout from '@/components/AuthLayout';
-// import { routerRedux } from 'dva/router';
 import { connect } from 'dva';
 import LoginModal from '@/components/LoginModal';
 

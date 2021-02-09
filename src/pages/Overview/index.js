@@ -39,6 +39,7 @@ class Overview extends React.Component {
       totalResultData: resultData,
       newData: [],
       unlabledData: [],
+      selectedRow: [],
     };
   }
 
@@ -378,7 +379,9 @@ class Overview extends React.Component {
 
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+        this.setState({
+          selectedRows: selectedRows,
+        });
       },
       getCheckboxProps: record => ({
         disabled: record.name === 'Disabled User', // Column configuration not to be checked
