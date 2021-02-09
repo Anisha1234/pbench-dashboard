@@ -12,10 +12,15 @@ import {
   ProgressSize,
   ProgressMeasureLocation,
   ProgressVariant,
+  Dropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownSeparator,
 } from '@patternfly/react-core';
 import { Icon } from 'antd';
 import { connect } from 'dva';
 import moment from 'moment';
+import CaretDownIcon from '@patternfly/react-icons/dist/js/icons/caret-down-icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { OutlinedClockIcon, UndoAltIcon, EllipsisVIcon } from '@patternfly/react-icons';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +30,7 @@ import styles from './index.less';
 
 @connect(({ user }) => ({
   user: user.user,
+  favoriteControllers: user.favoriteControllers,
 }))
 class Overview extends React.Component {
   constructor(props) {
@@ -64,8 +70,26 @@ class Overview extends React.Component {
     });
   };
 
-  onFavourite = e => {
-    console.log(e);
+  favoriteRecord = (event, value, controller) => {
+    // Stop propagation from going to the next page
+    event.stopPropagation();
+    const { dispatch } = this.props;
+    // dispatch an action to favorite controller
+    dispatch({
+      type: 'user/favoriteController',
+      payload: controller,
+    });
+  };
+
+  removeControllerFromFavorites = (event, value, controller) => {
+    // Stop propagation from going to the next page
+    event.stopPropagation();
+    const { dispatch } = this.props;
+    // dispatch an action to favorite controller
+    dispatch({
+      type: 'user/removeControllerFromFavorites',
+      payload: controller,
+    });
   };
 
   showDrowpdown = id => {
@@ -79,6 +103,7 @@ class Overview extends React.Component {
 
   markSeen = row => {
     const { totalResultData } = this.state;
+    const { dispatch } = this.props;
     const objIndex = totalResultData.findIndex(x => x.key === row.key);
     totalResultData[objIndex].seen = true;
     this.setState(
@@ -86,6 +111,10 @@ class Overview extends React.Component {
         totalResultData,
       },
       () => {
+        dispatch({
+          type: 'privatedatastore/updatePrivateControllers',
+          payload: totalResultData,
+        });
         this.getSeperatedResults();
       }
     );
@@ -93,15 +122,33 @@ class Overview extends React.Component {
 
   deleteResult = row => {
     const { totalResultData } = this.state;
+    const { dispatch } = this.props;
     const updatedResult = totalResultData.filter(x => x.key !== row.key);
     this.setState(
       {
         totalResultData: updatedResult,
       },
       () => {
+        dispatch({
+          type: 'privatedatastore/updatePrivateControllers',
+          payload: totalResultData,
+        });
         this.getSeperatedResults();
       }
     );
+  };
+
+  onToggleManageRunDropdown = isOpen => {
+    this.setState({
+      isOpen,
+    });
+  };
+
+  onSelectManageRunDropdown = () => {
+    const { isOpen } = this.state;
+    this.setState({
+      isOpen: !isOpen,
+    });
   };
 
   navigateToRunResult = key => {
@@ -119,7 +166,8 @@ class Overview extends React.Component {
   };
 
   render() {
-    const { newData, unlabledData } = this.state;
+    const { newData, unlabledData, isOpen } = this.state;
+    const { favoriteControllers } = this.props;
 
     const newDataColumns = [
       {
@@ -154,7 +202,26 @@ class Overview extends React.Component {
         title: '',
         dataIndex: 'fav',
         key: 'fav',
-        render: () => <Icon type="star" onClick={() => this.onFavourite()} />,
+        render: (value, row) => {
+          let isFavorite = false;
+          favoriteControllers.forEach(item => {
+            if (item.key === row.key) {
+              isFavorite = true;
+            }
+          });
+          if (isFavorite) {
+            return (
+              <a onClick={e => this.removeControllerFromFavorites(e, null, row)}>
+                <Icon type="star" theme="filled" />
+              </a>
+            );
+          }
+          return (
+            <a onClick={e => this.favoriteRecord(e, null, row)}>
+              <Icon type="star" />
+            </a>
+          );
+        },
       },
       {
         title: '',
@@ -218,7 +285,7 @@ class Overview extends React.Component {
           const deleteDate = moment(new Date(Date.parse(text)));
           const currDate = moment(new Date());
           const remainingDays = deleteDate.diff(currDate, 'days');
-          if (remainingDays > 60) {
+          if (remainingDays > 45) {
             return (
               <div>
                 <Text>
@@ -256,10 +323,34 @@ class Overview extends React.Component {
         },
       },
       {
+        title: 'Status',
+        dataIndex: 'status',
+        key: 'status',
+      },
+      {
         title: '',
         dataIndex: 'fav',
         key: 'fav',
-        render: () => <Icon type="star" onClick={() => this.onFavourite()} />,
+        render: (value, row) => {
+          let isFavorite = false;
+          favoriteControllers.forEach(item => {
+            if (item.key === row.key) {
+              isFavorite = true;
+            }
+          });
+          if (isFavorite) {
+            return (
+              <a onClick={e => this.removeControllerFromFavorites(e, null, row)}>
+                <Icon type="star" theme="filled" />
+              </a>
+            );
+          }
+          return (
+            <a onClick={e => this.favoriteRecord(e, null, row)}>
+              <Icon type="star" />
+            </a>
+          );
+        },
       },
       {
         title: '',
@@ -312,6 +403,20 @@ class Overview extends React.Component {
       );
     });
 
+    const manageRunDropdown = [
+      <DropdownItem key="accept" className={styles.ulclass}>
+        {' '}
+        Accept Runs
+      </DropdownItem>,
+      <DropdownItem key="Save" className={styles.ulclass}>
+        Save to Favourites
+      </DropdownItem>,
+      <DropdownSeparator key="separator" />,
+      <DropdownItem key="delete" className={styles.ulclass}>
+        Delete
+      </DropdownItem>,
+    ];
+
     return (
       <div className={styles.paddingBig}>
         <TextContent className={styles.paddingSmall}>
@@ -358,9 +463,26 @@ class Overview extends React.Component {
                   <Text component={TextVariants.h3}>
                     {' '}
                     New Runs
-                    <Button variant="link" icon={<UndoAltIcon />} style={{ float: 'right' }}>
-                      Refresh results
-                    </Button>
+                    <span style={{ float: 'right' }}>
+                      <Button variant="link" icon={<UndoAltIcon />}>
+                        Refresh results
+                      </Button>
+                      <Dropdown
+                        onSelect={this.onSelectManageRunDropdown}
+                        toggle={
+                          <DropdownToggle
+                            onToggle={this.onToggleManageRunDropdown}
+                            toggleIndicator={CaretDownIcon}
+                            isPrimary
+                            id="toggle-id-4"
+                          >
+                            Manage runs
+                          </DropdownToggle>
+                        }
+                        isOpen={isOpen}
+                        dropdownItems={manageRunDropdown}
+                      />
+                    </span>
                   </Text>
                 </TextContent>
               </div>
