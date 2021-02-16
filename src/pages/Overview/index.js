@@ -44,6 +44,10 @@ class Overview extends React.Component {
   }
 
   componentDidMount() {
+    this.getRunResult();
+  }
+
+  getRunResult() {
     const { totalResultData } = this.state;
     const { dispatch } = this.props;
     dispatch({
@@ -55,8 +59,8 @@ class Overview extends React.Component {
 
   getSeperatedResults() {
     const { totalResultData } = this.state;
-    const unlabledData = totalResultData.filter(x => x.seen === true);
-    const newData = totalResultData.filter(x => x.seen !== true);
+    const unlabledData = totalResultData.filter(x => x.saved === true);
+    const newData = totalResultData.filter(x => x.saved !== true);
     this.setState({
       newData,
       unlabledData,
@@ -106,7 +110,7 @@ class Overview extends React.Component {
     const { totalResultData } = this.state;
     const { dispatch } = this.props;
     const objIndex = totalResultData.findIndex(x => x.key === row.key);
-    totalResultData[objIndex].seen = true;
+    totalResultData[objIndex].saved = true;
     this.setState(
       {
         totalResultData,
@@ -198,6 +202,51 @@ class Overview extends React.Component {
         title: 'End Time',
         dataIndex: 'end',
         key: 'end',
+      },
+      {
+        title: 'Scheduled for deletion on',
+        dataIndex: 'deletion',
+        key: 'deletion',
+        render: text => {
+          const deleteDate = moment(new Date(Date.parse(text)));
+          const currDate = moment(new Date());
+          const remainingDays = deleteDate.diff(currDate, 'days');
+          if (remainingDays > 45) {
+            return (
+              <div>
+                <Text>
+                  {moment(text)
+                    .add(7, 'days')
+                    .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
+                </Text>
+                <Progress
+                  min={0}
+                  max={expirationLimit}
+                  value={expirationLimit - remainingDays}
+                  size={ProgressSize.sm}
+                  measureLocation={ProgressMeasureLocation.none}
+                />
+              </div>
+            );
+          }
+          return (
+            <div>
+              <span>
+                {moment(text)
+                  .add(7, 'days')
+                  .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
+              </span>
+              <Progress
+                min={0}
+                max={expirationLimit}
+                value={expirationLimit - remainingDays}
+                size={ProgressSize.sm}
+                variant={ProgressVariant.danger}
+                measureLocation={ProgressMeasureLocation.none}
+              />
+            </div>
+          );
+        },
       },
       {
         title: '',
@@ -473,7 +522,11 @@ class Overview extends React.Component {
                     {' '}
                     New and unmanaged Runs
                     <span style={{ float: 'right' }}>
-                      <Button variant="link" icon={<UndoAltIcon />}>
+                      <Button
+                        variant="link"
+                        icon={<UndoAltIcon />}
+                        onClick={() => this.getRunResult()}
+                      >
                         Refresh results
                       </Button>
                       <Dropdown
