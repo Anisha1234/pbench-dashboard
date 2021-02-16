@@ -102,7 +102,7 @@ class Overview extends React.Component {
     }
   };
 
-  markSeen = row => {
+  saveRuns = row => {
     const { totalResultData } = this.state;
     const { dispatch } = this.props;
     const objIndex = totalResultData.findIndex(x => x.key === row.key);
@@ -237,9 +237,10 @@ class Overview extends React.Component {
               />
               <div className={styles.dropdown} id={`newrun${row.key}`} style={{ display: 'none' }}>
                 <div className={styles.dropdownContent}>
-                  <div className={styles.dropdownLink} onClick={() => this.markSeen(row)}>
-                    Mark as seen
+                  <div className={styles.dropdownLink} onClick={() => this.saveRuns(row)}>
+                    Save Runs
                   </div>
+                  <div className={styles.dropdownLink}>Mark unread</div>
                   <div className={styles.dropdownLink} onClick={() => this.deleteResult(row)}>
                     Delete
                   </div>
@@ -366,6 +367,7 @@ class Overview extends React.Component {
               />
               <div className={styles.dropdown} id={`newrun${row.key}`} style={{ display: 'none' }}>
                 <div className={styles.dropdownContent}>
+                  <div className={styles.dropdownLink}>Mark unread</div>
                   <div className={styles.dropdownLink} onClick={() => this.deleteResult(row)}>
                     Delete
                   </div>
@@ -380,7 +382,7 @@ class Overview extends React.Component {
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
         this.setState({
-          selectedRows: selectedRows,
+          selectedRows,
         });
       },
       getCheckboxProps: record => ({
@@ -407,16 +409,20 @@ class Overview extends React.Component {
     });
 
     const manageRunDropdown = [
-      <DropdownItem key="accept" className={styles.ulclass}>
+      <DropdownItem key="save" className={styles.ulclass}>
         {' '}
-        Accept Runs
+        Save Runs
       </DropdownItem>,
-      <DropdownItem key="Save" className={styles.ulclass}>
-        Save to Favourites
+      <DropdownItem key="unread" className={styles.ulclass}>
+        {' '}
+        Mark as unread
+      </DropdownItem>,
+      <DropdownItem key="favourite" className={styles.ulclass}>
+        Mark Favourited
       </DropdownItem>,
       <DropdownSeparator key="separator" />,
       <DropdownItem key="delete" className={styles.ulclass}>
-        Delete
+        Delete runs
       </DropdownItem>,
     ];
 
@@ -465,7 +471,7 @@ class Overview extends React.Component {
                 <TextContent>
                   <Text component={TextVariants.h3}>
                     {' '}
-                    New Runs
+                    New and unmanaged Runs
                     <span style={{ float: 'right' }}>
                       <Button variant="link" icon={<UndoAltIcon />}>
                         Refresh results
@@ -505,7 +511,7 @@ class Overview extends React.Component {
             <Card>
               <div className={styles.paddingSmall}>
                 <TextContent className={styles.paddingSmall}>
-                  <Text component={TextVariants.h3}> Unlabled</Text>
+                  <Text component={TextVariants.h3}> Saved Runs</Text>
                 </TextContent>
                 <Button variant="link">Go to all runs</Button>
               </div>

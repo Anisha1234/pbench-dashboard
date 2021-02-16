@@ -24,26 +24,6 @@ class RunResults extends Component {
     );
     const acceptanceStatus = selectedPrivateControllerData[0].seen;
 
-    const acceptedHint = (
-      <Hint className={styles.customAccepteddHint}>
-        <HintBody>
-          <Flex>
-            <FlexItem>
-              <InfoCircleIcon className={styles.info} />
-            </FlexItem>
-            <FlexItem>
-              <TextContent>
-                <Text component={TextVariants.h6}> You have already accepted this run </Text>
-              </TextContent>
-              <a style={{ color: 'red' }} className={styles.actionBtn}>
-                Delete run
-              </a>
-            </FlexItem>
-          </Flex>
-        </HintBody>
-      </Hint>
-    );
-
     const unAcceptedHint = (
       <Hint className={styles.customUnAccepteddHint}>
         <HintBody>
@@ -75,7 +55,13 @@ class RunResults extends Component {
           <TextContent className={styles.paddingSmall}>
             <Text component={TextVariants.h1}> {selectedPrivateController}</Text>
           </TextContent>
-          {acceptanceStatus === true ? acceptedHint : unAcceptedHint}
+          {acceptanceStatus === true ? '' : unAcceptedHint}
+          <TextContent>
+            <Text component={TextVariants.h3}>
+              {' '}
+              Detail Page about specific run that you drilled into
+            </Text>
+          </TextContent>
         </div>
       </React.Fragment>
     );
