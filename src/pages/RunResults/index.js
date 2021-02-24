@@ -9,7 +9,7 @@ import {
   Flex,
   FlexItem,
 } from '@patternfly/react-core';
-import { InfoCircleIcon, ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import styles from './index.less';
 
 @connect(({ privatedatastore }) => ({

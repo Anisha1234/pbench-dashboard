@@ -4,6 +4,7 @@ export default {
   state: {
     favoriteControllers: [],
     favoriteResults: [],
+    seenControllers: [],
     // user: {},
   },
 
@@ -34,6 +35,12 @@ export default {
     *favoriteResult({ payload }, { put }) {
       yield put({
         type: 'modifyFavoritedResults',
+        payload,
+      });
+    },
+    *markControllerSeen({ payload }, { put }) {
+      yield put({
+        type: 'modifySeenControllers',
         payload,
       });
     },
@@ -68,6 +75,12 @@ export default {
       return {
         ...state,
         favoriteResults: [...state.favoriteResults, payload],
+      };
+    },
+    modifySeenControllers(state, { payload }) {
+      return {
+        ...state,
+        seenResults: [...state.seenControllers, payload],
       };
     },
     removeFavoriteController(state, { payload }) {

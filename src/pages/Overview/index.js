@@ -31,6 +31,7 @@ import styles from './index.less';
 @connect(({ user }) => ({
   user: user.user,
   favoriteControllers: user.favoriteControllers,
+  seenControllers: user.seenControllers,
 }))
 class Overview extends React.Component {
   constructor(props) {
@@ -156,11 +157,12 @@ class Overview extends React.Component {
     });
   };
 
-  navigateToRunResult = key => {
+  navigateToRunResult = (text, row) => {
     const { dispatch } = this.props;
+    this.markResultSeen(row);
     dispatch({
       type: 'privatedatastore/updateSelectedPrivateController',
-      payload: key,
+      payload: text,
     }).then(() => {
       dispatch(
         routerRedux.push({
@@ -170,25 +172,68 @@ class Overview extends React.Component {
     });
   };
 
+  navigateToExpiringResult = () => {
+    const { dispatch } = this.props;
+    dispatch(
+      routerRedux.push({
+        pathname: 'private/expiringresults',
+      })
+    );
+  };
+
+  markResultSeen = controller => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/markControllerSeen',
+      payload: controller,
+    });
+  };
+
   render() {
     const { newData, unlabledData, isOpen } = this.state;
-    const { favoriteControllers } = this.props;
+    const { favoriteControllers, seenControllers } = this.props;
 
     const newDataColumns = [
       {
         title: 'Result',
         dataIndex: 'result',
         key: 'result',
-        render: text => {
+        render: (text, row) => {
+          let isSeen = false;
+          if (seenControllers !== []) {
+            seenControllers.forEach(item => {
+              if (item.key === row.key) {
+                isSeen = true;
+              }
+            });
+          }
+          if (isSeen) {
+            return (
+              <div>
+                <Button
+                  variant="link"
+                  isInline
+                  style={{ marginBottom: '8px' }}
+                  onClick={() => this.navigateToRunResult(text[0], row)}
+                >
+                  {text[0]}
+                </Button>
+                <br />
+                <Text component={TextVariants.p} className={styles.subText}>
+                  <span className={styles.label}>{text[1]}</span>
+                </Text>
+              </div>
+            );
+          }
           return (
             <div>
               <Button
                 variant="link"
                 isInline
                 style={{ marginBottom: '8px' }}
-                onClick={() => this.navigateToRunResult(text[0])}
+                onClick={() => this.navigateToRunResult(text[0], row)}
               >
-                {text[0]}
+                <b>{text[0]}</b>
               </Button>
               <br />
               <Text component={TextVariants.p} className={styles.subText}>
@@ -507,7 +552,7 @@ class Overview extends React.Component {
               </div>
               <Card className={styles.subCard}>
                 <div className={styles.paddingSmall}>
-                  <Button variant="link" isInline>
+                  <Button variant="link" isInline onClick={() => this.navigateToExpiringResult()}>
                     View all warnings
                   </Button>
                 </div>

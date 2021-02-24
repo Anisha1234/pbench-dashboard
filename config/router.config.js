@@ -90,6 +90,11 @@ module.exports = [
             name: 'runresults',
             component: './RunResults',
           },
+          {
+            path: '/private/expiringresults',
+            name: 'expiringresults',
+            component: './ExpiringResults',
+          },
         ],
       },
       {
