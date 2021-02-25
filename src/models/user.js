@@ -50,6 +50,12 @@ export default {
         payload,
       });
     },
+    *removeControllerFromSeen({ payload }, { put }) {
+      yield put({
+        type: 'removeSeenController',
+        payload,
+      });
+    },
   },
 
   reducers: {
@@ -80,7 +86,7 @@ export default {
     modifySeenControllers(state, { payload }) {
       return {
         ...state,
-        seenResults: [...state.seenControllers, payload],
+        seenControllers: [...state.seenControllers, payload],
       };
     },
     removeFavoriteController(state, { payload }) {
@@ -93,6 +99,12 @@ export default {
       return {
         ...state,
         favoriteResults: state.favoriteResults.filter(item => item.key !== payload.key),
+      };
+    },
+    removeSeenController(state, { payload }) {
+      return {
+        ...state,
+        seenControllers: state.seenControllers.filter(item => item.key !== payload.key),
       };
     },
   },

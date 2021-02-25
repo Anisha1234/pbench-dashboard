@@ -189,6 +189,14 @@ class Overview extends React.Component {
     });
   };
 
+  removeControllerFromSeen = controller => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/removeControllerFromSeen',
+      payload: controller,
+    });
+  };
+
   render() {
     const { newData, unlabledData, isOpen } = this.state;
     const { favoriteControllers, seenControllers } = this.props;
@@ -334,7 +342,12 @@ class Overview extends React.Component {
                   <div className={styles.dropdownLink} onClick={() => this.saveRuns(row)}>
                     Save Runs
                   </div>
-                  <div className={styles.dropdownLink}>Mark unread</div>
+                  <div
+                    className={styles.dropdownLink}
+                    onClick={() => this.removeControllerFromSeen(row)}
+                  >
+                    Mark unread
+                  </div>
                   <div className={styles.dropdownLink} onClick={() => this.deleteResult(row)}>
                     Delete
                   </div>
