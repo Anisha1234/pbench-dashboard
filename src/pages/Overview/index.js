@@ -19,12 +19,12 @@ import {
 } from '@patternfly/react-core';
 import { Icon } from 'antd';
 import { connect } from 'dva';
-import moment from 'moment';
 import CaretDownIcon from '@patternfly/react-icons/dist/js/icons/caret-down-icon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { OutlinedClockIcon, UndoAltIcon, EllipsisVIcon } from '@patternfly/react-icons';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { resultData, expirationLimit, expiringSoonResults } from '../../../mock/overview';
+import { getDiffDays } from '../../utils/moment_constants';
 import Table from '@/components/Table';
 import styles from './index.less';
 
@@ -261,17 +261,11 @@ class Overview extends React.Component {
         dataIndex: 'deletion',
         key: 'deletion',
         render: text => {
-          const deleteDate = moment(new Date(Date.parse(text)));
-          const currDate = moment(new Date());
-          const remainingDays = deleteDate.diff(currDate, 'days');
+          const remainingDays = getDiffDays(text);
           if (remainingDays > 45) {
             return (
               <div>
-                <Text>
-                  {moment(text)
-                    .add(7, 'days')
-                    .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-                </Text>
+                <Text>{text}</Text>
                 <Progress
                   min={0}
                   max={expirationLimit}
@@ -284,11 +278,7 @@ class Overview extends React.Component {
           }
           return (
             <div>
-              <span>
-                {moment(text)
-                  .add(7, 'days')
-                  .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-              </span>
+              <span>{text}</span>
               <Progress
                 min={0}
                 max={expirationLimit}
@@ -391,17 +381,11 @@ class Overview extends React.Component {
         dataIndex: 'deletion',
         key: 'deletion',
         render: text => {
-          const deleteDate = moment(new Date(Date.parse(text)));
-          const currDate = moment(new Date());
-          const remainingDays = deleteDate.diff(currDate, 'days');
+          const remainingDays = getDiffDays(text);
           if (remainingDays > 45) {
             return (
               <div>
-                <Text>
-                  {moment(text)
-                    .add(7, 'days')
-                    .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-                </Text>
+                <Text>{text}</Text>
                 <Progress
                   min={0}
                   max={expirationLimit}
@@ -414,11 +398,7 @@ class Overview extends React.Component {
           }
           return (
             <div>
-              <span>
-                {moment(text)
-                  .add(7, 'days')
-                  .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-              </span>
+              <span>{text}</span>
               <Progress
                 min={0}
                 max={expirationLimit}
