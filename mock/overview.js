@@ -1,106 +1,24 @@
 export const expirationLimit = 90;
 
 // P.S: the key needs to be unique for this object
-export const resultData = [
-  {
-    key: 1,
-    result: ['mock result -1', 'example.lab.eng.com'],
-    end: '2021-02-10T 11:52:34.552478',
-    deletion: '2021-04-20T11:52:34.552478',
+export const resultData = new Array(9).fill().map((value, index) => {
+  return {
+    key: index,
+    result: [`mock result - ${index}`, 'example.lab.eng.com'],
+    end: `2021-0${Math.floor(Math.random() * 6) + 1}-0${index}T11:52:34.552478`,
+    deletion: `2021-0${Math.floor(Math.random() * 6) + 1}-${index + 20}T11:52:34.552478`,
     seen: false,
-    saved: false,
+    saved: Math.random() < 0.5,
     status: 'published',
     description: 'More content can be added here',
-  },
-  {
-    key: 2,
-    result: ['mock result -2', ' example.lab.eng.com'],
-    end: '2021-1-10T11:52:34.552478',
-    deletion: '2021-04-10T11:52:34.552478',
-    seen: true,
-    saved: false,
-    status: 'unpublished',
-    description: 'More content can be added here',
-  },
-  {
-    key: 3,
-    result: ['mock result -3', ' example.lab.eng.com'],
-    end: '2020-11-10T11:52:34.552478',
-    deletion: '2021-04-20T11:52:34.552478',
-    seen: true,
-    saved: false,
-    status: 'unpublished',
-    description: 'More content can be added here',
-  },
-  {
-    key: 4,
-    result: ['mock result -4', ' example.lab.eng.com'],
-    end: '2021-02-05T11:52:34.552478',
-    deletion: '2021-03-25T11:52:34.552478',
-    seen: false,
-    saved: false,
-    status: 'published',
-    description: 'More content can be added here',
-  },
-  {
-    key: 5,
-    result: ['mock result -5', 'example.lab.eng.com'],
-    end: '2021-01-10T11:52:34.552478',
-    deletion: '2021-04-30T11:52:34.552478',
-    seen: true,
-    saved: true,
-    status: 'unpublished',
-    description: 'More content can be added here',
-  },
-  {
-    key: 6,
-    result: ['mock result -6', ' example.lab.eng.com'],
-    end: '2021-02-05T11:52:34.552478',
-    deletion: '2021-04-05T11:52:34.552478',
-    seen: true,
-    saved: true,
-    status: 'unpublished',
-    description: 'More content can be added here',
-  },
-  {
-    key: 7,
-    result: ['mock result -7', ' example.lab.eng.com'],
-    end: '2021-01-10T11:52:34.552478',
-    deletion: '2021-04-10T11:52:34.552478',
-    seen: false,
-    saved: true,
-    status: 'published',
-    description: 'More content can be added here',
-  },
-  {
-    key: 8,
-    result: ['mock result -8', ' example.lab.eng.com'],
-    end: '2021-02-05T11:52:34.552478',
-    deletion: '2021-04-05T11:52:34.552478',
-    seen: false,
-    saved: true,
-    status: 'unpublished',
-    description: 'More content can be added here',
-  },
-  {
-    key: 9,
-    result: ['mock result -9', ' example.lab.eng.com'],
-    end: '2021-01-20T11:52:34.552478',
-    deletion: '2021-04-20T11:52:34.552478',
-    seen: true,
-    saved: true,
-    status: 'unpublished',
-    description: 'More content can be added here',
-  },
-];
+  };
+});
 
-export const expiringSoonResults = {
-  'expiring-result-1': '2020-09-10T 11:52:34:552478',
-  'expiring-result-2': '2020-09-10T 11:52:34:552478',
-  'expiring-result-3': '2020-09-10T 11:52:34:552478',
-  'expiring-result-4': '2020-09-10T 11:52:34:552478',
-  'expiring-result-5': '2020-09-10T 11:52:34:552478',
-  'expiring-result-6': '2020-09-10T 11:52:34:552478',
-  'expiring-result-7': '2020-09-10T 11:52:34:552478',
-  'expiring-result-8': '2020-09-10T 11:52:34:552478',
-};
+export const expiringSoonResults = new Array(10).fill().map((value, index) => {
+  return {
+    result: [
+      `expiring-result-${index}`,
+      `2021-0${Math.floor(Math.random() * 6) + 1}-0${index}T11:52:34.552478`,
+    ],
+  };
+});

@@ -31,16 +31,16 @@ import styles from './index.less';
 @connect(({ user }) => ({
   user: user.user,
   favoriteControllers: user.favoriteControllers,
-  seenControllers: user.seenControllers,
+  seenResults: user.seenResults,
 }))
 class Overview extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isManageRunDropdownOpen: false,
       totalResultData: resultData,
       newData: [],
       unlabledData: [],
-      selectedRow: [],
     };
   }
 
@@ -52,7 +52,7 @@ class Overview extends React.Component {
     const { totalResultData } = this.state;
     const { dispatch } = this.props;
     dispatch({
-      type: 'privatedatastore/updatePrivateControllers',
+      type: 'dashboard/fetchPrivateResults',
       payload: totalResultData,
     });
     this.getSeperatedResults();
@@ -67,14 +67,6 @@ class Overview extends React.Component {
       unlabledData,
     });
   }
-
-  onCollapse = (event, rowKey, isOpen) => {
-    const { rows } = this.state;
-    rows[rowKey].isOpen = isOpen;
-    this.setState({
-      rows,
-    });
-  };
 
   favoriteRecord = (event, value, controller) => {
     // Stop propagation from going to the next page
@@ -118,7 +110,7 @@ class Overview extends React.Component {
       },
       () => {
         dispatch({
-          type: 'privatedatastore/updatePrivateControllers',
+          type: 'global/updatePrivateControllers',
           payload: totalResultData,
         });
         this.getSeperatedResults();
@@ -136,7 +128,7 @@ class Overview extends React.Component {
       },
       () => {
         dispatch({
-          type: 'privatedatastore/updatePrivateControllers',
+          type: 'global/updateSelectedResults',
           payload: totalResultData,
         });
         this.getSeperatedResults();
@@ -144,16 +136,16 @@ class Overview extends React.Component {
     );
   };
 
-  onToggleManageRunDropdown = isOpen => {
+  onToggleManageRunDropdown = isManageRunDropdownOpen => {
     this.setState({
-      isOpen,
+      isManageRunDropdownOpen,
     });
   };
 
   onSelectManageRunDropdown = () => {
-    const { isOpen } = this.state;
+    const { isManageRunDropdownOpen } = this.state;
     this.setState({
-      isOpen: !isOpen,
+      isManageRunDropdownOpen: !isManageRunDropdownOpen,
     });
   };
 
@@ -161,7 +153,7 @@ class Overview extends React.Component {
     const { dispatch } = this.props;
     this.markResultSeen(row);
     dispatch({
-      type: 'privatedatastore/updateSelectedPrivateController',
+      type: 'global/updateSelectedResults',
       payload: text,
     }).then(() => {
       dispatch(
@@ -184,22 +176,22 @@ class Overview extends React.Component {
   markResultSeen = controller => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/markControllerSeen',
+      type: 'user/markResultSeen',
       payload: controller,
     });
   };
 
-  removeControllerFromSeen = controller => {
+  removeResultFromSeen = controller => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/removeControllerFromSeen',
+      type: 'user/removeResultFromSeen',
       payload: controller,
     });
   };
 
   render() {
-    const { newData, unlabledData, isOpen } = this.state;
-    const { favoriteControllers, seenControllers } = this.props;
+    const { newData, unlabledData, isManageRunDropdownOpen } = this.state;
+    const { favoriteControllers, seenResults } = this.props;
 
     const newDataColumns = [
       {
@@ -208,8 +200,8 @@ class Overview extends React.Component {
         key: 'result',
         render: (text, row) => {
           let isSeen = false;
-          if (seenControllers !== []) {
-            seenControllers.forEach(item => {
+          if (seenResults !== []) {
+            seenResults.forEach(item => {
               if (item.key === row.key) {
                 isSeen = true;
               }
@@ -354,22 +346,50 @@ class Overview extends React.Component {
         title: 'Result',
         dataIndex: 'result',
         key: 'result',
-        render: text => (
-          <div>
-            <Button
-              variant="link"
-              isInline
-              style={{ marginBottom: '8px' }}
-              onClick={() => this.navigateToRunResult(text[0])}
-            >
-              {text[0]}
-            </Button>
-            <br />
-            <Text component={TextVariants.p} className={styles.subText}>
-              <span className={styles.label}>{text[1]}</span>
-            </Text>
-          </div>
-        ),
+        render: (text, row) => {
+          let isSeen = false;
+          if (seenResults !== []) {
+            seenResults.forEach(item => {
+              if (item.key === row.key) {
+                isSeen = true;
+              }
+            });
+          }
+          if (isSeen) {
+            return (
+              <div>
+                <Button
+                  variant="link"
+                  isInline
+                  style={{ marginBottom: '8px' }}
+                  onClick={() => this.navigateToRunResult(text[0], row)}
+                >
+                  {text[0]}
+                </Button>
+                <br />
+                <Text component={TextVariants.p} className={styles.subText}>
+                  <span className={styles.label}>{text[1]}</span>
+                </Text>
+              </div>
+            );
+          }
+          return (
+            <div>
+              <Button
+                variant="link"
+                isInline
+                style={{ marginBottom: '8px' }}
+                onClick={() => this.navigateToRunResult(text[0], row)}
+              >
+                <b>{text[0]}</b>
+              </Button>
+              <br />
+              <Text component={TextVariants.p} className={styles.subText}>
+                <span className={styles.label}>{text[1]}</span>
+              </Text>
+            </div>
+          );
+        },
       },
       {
         title: 'End Time',
@@ -467,27 +487,23 @@ class Overview extends React.Component {
     ];
 
     const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        this.setState({
-          selectedRows,
-        });
-      },
+      onChange: () => {},
       getCheckboxProps: record => ({
         disabled: record.name === 'Disabled User', // Column configuration not to be checked
         name: record.name,
       }),
     };
 
-    const expiringSoonTable = Object.keys(expiringSoonResults).map(function(result) {
+    const expiringSoonTable = expiringSoonResults.map(function(result) {
       return (
         <Card className={styles.subCard}>
           <div className={styles.paddingSmall}>
             <TextContent>
               <Button variant="link" isInline>
-                {result}
+                {result.result[0]}
               </Button>
               <Text component={TextVariants.p} className={styles.subText}>
-                <OutlinedClockIcon className={styles.icons} /> {expiringSoonResults[result]}
+                <OutlinedClockIcon className={styles.icons} /> {result.result[1]}
               </Text>
             </TextContent>
           </div>
@@ -579,7 +595,7 @@ class Overview extends React.Component {
                             Manage runs
                           </DropdownToggle>
                         }
-                        isOpen={isOpen}
+                        isOpen={isManageRunDropdownOpen}
                         dropdownItems={manageRunDropdown}
                       />
                     </span>

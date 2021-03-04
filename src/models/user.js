@@ -4,7 +4,7 @@ export default {
   state: {
     favoriteControllers: [],
     favoriteResults: [],
-    seenControllers: [],
+    seenResults: [],
     // user: {},
   },
 
@@ -38,9 +38,9 @@ export default {
         payload,
       });
     },
-    *markControllerSeen({ payload }, { put }) {
+    *markResultSeen({ payload }, { put }) {
       yield put({
-        type: 'modifySeenControllers',
+        type: 'modifySeenResults',
         payload,
       });
     },
@@ -50,9 +50,9 @@ export default {
         payload,
       });
     },
-    *removeControllerFromSeen({ payload }, { put }) {
+    *removeResultFromSeen({ payload }, { put }) {
       yield put({
-        type: 'removeSeenController',
+        type: 'removeSeenResults',
         payload,
       });
     },
@@ -83,10 +83,10 @@ export default {
         favoriteResults: [...state.favoriteResults, payload],
       };
     },
-    modifySeenControllers(state, { payload }) {
+    modifySeenResults(state, { payload }) {
       return {
         ...state,
-        seenControllers: [...state.seenControllers, payload],
+        seenResults: [...state.seenResults, payload],
       };
     },
     removeFavoriteController(state, { payload }) {
@@ -101,10 +101,10 @@ export default {
         favoriteResults: state.favoriteResults.filter(item => item.key !== payload.key),
       };
     },
-    removeSeenController(state, { payload }) {
+    removeSeenResults(state, { payload }) {
       return {
         ...state,
-        seenControllers: state.seenControllers.filter(item => item.key !== payload.key),
+        seenResults: state.seenResults.filter(item => item.key !== payload.key),
       };
     },
   },

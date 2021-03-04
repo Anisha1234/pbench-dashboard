@@ -18,6 +18,7 @@ export default {
   state: {
     result: [],
     results: {},
+    privateResults: [],
     iterationParams: {},
     iterations: [],
     controllers: [],
@@ -35,10 +36,16 @@ export default {
     },
     *fetchControllers({ payload }, { call, put }) {
       const controllers = yield call(queryControllers, payload);
-
+      console.log(controllers);
       yield put({
         type: 'getControllers',
         payload: controllers,
+      });
+    },
+    *fetchPrivateResults({ payload }, { put }) {
+      yield put({
+        type: 'getPrivateResults',
+        payload,
       });
     },
     *fetchResults({ payload }, { call, put }) {
@@ -224,6 +231,12 @@ export default {
       return {
         ...state,
         controllers: payload,
+      };
+    },
+    getPrivateResults(state, { payload }) {
+      return {
+        ...state,
+        privateResults: payload,
       };
     },
     getResults(state, { payload }) {

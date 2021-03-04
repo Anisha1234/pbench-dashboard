@@ -11,8 +11,6 @@ export default {
     selectedControllers: [],
     selectedFields: [],
     selectedIterations: [],
-    privateControllers: [],
-    selectedPrivateControllers: [],
   },
 
   effects: {
@@ -60,18 +58,6 @@ export default {
         payload,
       });
     },
-    *updatePrivateControllers({ payload }, { put }) {
-      yield put({
-        type: 'modifyPrivateControllers',
-        payload,
-      });
-    },
-    *updateSelectedPrivateController({ payload }, { put }) {
-      yield put({
-        type: 'modifySelectedPrivateController',
-        payload,
-      });
-    },
   },
 
   reducers: {
@@ -109,18 +95,6 @@ export default {
       return {
         ...state,
         selectedIterations: payload,
-      };
-    },
-    modifyPrivateControllers(state, { payload }) {
-      return {
-        ...state,
-        privateControllers: payload,
-      };
-    },
-    modifySelectedPrivateController(state, { payload }) {
-      return {
-        ...state,
-        selectedPrivateController: payload,
       };
     },
   },

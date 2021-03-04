@@ -14,9 +14,9 @@ import {
   ProgressVariant,
 } from '@patternfly/react-core';
 import { Icon } from 'antd';
-import moment from 'moment';
 import { EllipsisVIcon } from '@patternfly/react-icons';
 import { resultData, expirationLimit } from '../../../mock/overview';
+import { getDiffDays } from '../../utils/moment_constants';
 import Table from '@/components/Table';
 import styles from './index.less';
 
@@ -68,17 +68,11 @@ class ExpiringResults extends Component {
         dataIndex: 'deletion',
         key: 'deletion',
         render: text => {
-          const deleteDate = moment(new Date(Date.parse(text)));
-          const currDate = moment(new Date());
-          const remainingDays = deleteDate.diff(currDate, 'days');
+          const remainingDays = getDiffDays(text);
           if (remainingDays > 45) {
             return (
               <div>
-                <Text>
-                  {moment(text)
-                    .add(7, 'days')
-                    .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-                </Text>
+                <Text>{text}</Text>
                 <Progress
                   min={0}
                   max={expirationLimit}
@@ -91,11 +85,7 @@ class ExpiringResults extends Component {
           }
           return (
             <div>
-              <span>
-                {moment(text)
-                  .add(7, 'days')
-                  .format('YYYY-MM-DDTHH:mm:ss:SSSSSS')}
-              </span>
+              <span>{text}</span>
               <Progress
                 min={0}
                 max={expirationLimit}
@@ -164,11 +154,7 @@ class ExpiringResults extends Component {
     ];
 
     const rowSelection = {
-      onChange: (selectedRowKeys, selectedRows) => {
-        this.setState({
-          selectedRows,
-        });
-      },
+      onChange: () => {},
       getCheckboxProps: record => ({
         disabled: record.name === 'Disabled User', // Column configuration not to be checked
         name: record.name,

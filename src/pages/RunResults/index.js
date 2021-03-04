@@ -12,18 +12,15 @@ import {
 import { ExclamationTriangleIcon } from '@patternfly/react-icons';
 import styles from './index.less';
 
-@connect(({ privatedatastore }) => ({
-  selectedPrivateController: privatedatastore.selectedPrivateController,
-  privateControllers: privatedatastore.privateControllers,
+@connect(({ global, dashboard }) => ({
+  selectedResults: global.selectedResults,
+  privateResults: dashboard.privateResults,
 }))
 class RunResults extends Component {
   render() {
-    const { selectedPrivateController, privateControllers } = this.props;
-    const selectedPrivateControllerData = privateControllers.filter(
-      score => score.result[0] === selectedPrivateController
-    );
-    const acceptanceStatus = selectedPrivateControllerData[0].seen;
-
+    const { selectedResults, privateResults } = this.props;
+    const selectedResultData = privateResults.filter(score => score.result[0] === selectedResults);
+    const acceptanceStatus = selectedResultData[0].saved;
     const unAcceptedHint = (
       <Hint className={styles.customUnAccepteddHint}>
         <HintBody>
@@ -53,7 +50,7 @@ class RunResults extends Component {
       <React.Fragment>
         <div className={styles.paddingBig}>
           <TextContent className={styles.paddingSmall}>
-            <Text component={TextVariants.h1}> {selectedPrivateController}</Text>
+            <Text component={TextVariants.h1}> {selectedResults}</Text>
           </TextContent>
           {acceptanceStatus === true ? '' : unAcceptedHint}
           <TextContent>

@@ -19,32 +19,11 @@ class LoginModal extends React.Component {
     super(props);
     this.state = {
       isModalOpen: false,
-      modalContent: '',
+      modalView: 0,
     };
   }
 
   componentDidMount() {
-    const loginAction = (
-      <div>
-        <TextContent>
-          <Text component={TextVariants.h4}>
-            This action requires login. Please login to Pbench Dashboard to continue.
-          </Text>
-        </TextContent>
-        <Button key="confirm" variant="primary" onClick={this.handleLoginModal}>
-          Login
-        </Button>
-        <Button key="confirm" variant="link" onClick={this.handleSignupModal}>
-          Signup
-        </Button>
-        <Button key="cancel" variant="link" onClick={this.handleModalCancel}>
-          Cancel
-        </Button>
-      </div>
-    );
-    this.setState({
-      modalContent: loginAction,
-    });
     this.handleModalToggle();
   }
 
@@ -64,7 +43,7 @@ class LoginModal extends React.Component {
 
   handleLoginModal = () => {
     this.setState({
-      modalContent: <LoginForm />,
+      modalView: 1,
     });
   };
 
@@ -77,7 +56,26 @@ class LoginModal extends React.Component {
   };
 
   render() {
-    const { isModalOpen, modalContent } = this.state;
+    const { isModalOpen, modalView } = this.state;
+    const loginAction = (
+      <div>
+        <TextContent>
+          <Text component={TextVariants.h4}>
+            This action requires login. Please login to Pbench Dashboard to continue.
+          </Text>
+        </TextContent>
+        <Button key="confirm" variant="primary" onClick={this.handleLoginModal}>
+          Login
+        </Button>
+        <Button key="confirm" variant="link" onClick={this.handleSignupModal}>
+          Signup
+        </Button>
+        <Button key="cancel" variant="link" onClick={this.handleModalCancel}>
+          Cancel
+        </Button>
+      </div>
+    );
+    const modalContent = modalView === 0 ? loginAction : <LoginForm />;
     return (
       <React.Fragment>
         <Modal
